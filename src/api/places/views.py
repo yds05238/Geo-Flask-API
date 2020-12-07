@@ -1,13 +1,11 @@
 from flask import request
 from flask_restx import Namespace, Resource, fields
 
-# from geoalchemy2 import Geography
 
 from src.api.places.crud import (  # isort:skip
     get_all_places,
     get_place_by_id,
     get_place_by_name,
-    # search_places_by_name,
     add_place,
     update_place,
     delete_place,
@@ -21,14 +19,8 @@ place = places_namespace.model(
     {
         "id": fields.Integer(readOnly=True),
         "name": fields.String(required=True),
-        # "coords": fields.Geography(required=True),
-        # "coords": Geography(required=True),
         "coords": fields.String(required=True),
-        'types': fields.String(required=True),
-
-        # "username": fields.String(required=True),
-        # "email": fields.String(required=True),
-        # "created_date": fields.DateTime,
+        "types": fields.String(required=True),
     },
 )
 
@@ -49,7 +41,6 @@ class PlacesList(Resource):
         lat = post_data.get("lat")
         name = post_data.get("name")
         types = post_data.get("types")
-        # coords = f"POINT({lon} {lat})"
         response_object = {}
 
         place = get_place_by_name(name)
@@ -62,20 +53,6 @@ class PlacesList(Resource):
         response_object["message"] = f"{name} was added!"
         return response_object, 201
 
-        # username = post_data.get("username")
-        # email = post_data.get("email")
-        # response_object = {}
-
-        # user = get_user_by_email(email)
-        # if user:
-        #     response_object["message"] = "Sorry. That email already exists."
-        #     return response_object, 400
-
-        # add_user(username, email)
-
-        # response_object["message"] = f"{email} was added!"
-        # return response_object, 201
-
 
 class Places(Resource):
     @places_namespace.marshal_with(place)
@@ -87,11 +64,6 @@ class Places(Resource):
         if not place:
             places_namespace.abort(404, f"Place {place_id} does not exist")
         return place, 200
-
-        # user = get_user_by_id(user_id)
-        # if not user:
-        #     users_namespace.abort(404, f"User {user_id} does not exist")
-        # return user, 200
 
     @places_namespace.expect(place, validate=True)
     @places_namespace.response(200, "<place_id> was updated!")
@@ -119,23 +91,6 @@ class Places(Resource):
         response_object["message"] = f"{place.id} was updated!"
         return response_object, 200
 
-        # username = post_data.get("username")
-        # email = post_data.get("email")
-        # response_object = {}
-
-        # user = get_user_by_id(user_id)
-        # if not user:
-        #     users_namespace.abort(404, f"User {user_id} does not exist")
-
-        # if get_user_by_email(email):
-        #     response_object["message"] = "Sorry. That email already exists."
-        #     return response_object, 400
-
-        # update_user(user, username, email)
-
-        # response_object["message"] = f"{user.id} was updated!"
-        # return response_object, 200
-
     @places_namespace.response(200, "<place_id> was removed!")
     @places_namespace.response(404, "Place <place_id> does not exist")
     def delete(self, place_id):
@@ -150,16 +105,6 @@ class Places(Resource):
 
         response_object["message"] = f"{place.name} was removed!"
         return response_object, 200
-
-        # user = get_user_by_id(user_id)
-
-        # if not user:
-        #     users_namespace.abort(404, f"User {user_id} does not exist")
-
-        # delete_user(user)
-
-        # response_object["message"] = f"{user.email} was removed!"
-        # return response_object, 200
 
 
 places_namespace.add_resource(PlacesList, "")

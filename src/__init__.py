@@ -3,7 +3,7 @@ import os
 from flask import Flask
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.middleware.proxy_fix import ProxyFix  # new
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 # instantiate the extensions
 db = SQLAlchemy()
@@ -24,7 +24,6 @@ def create_app(script_info=None):
     db.init_app(app)
     if os.getenv("FLASK_ENV") == "development":
         admin.init_app(app)
-        # toolbar.init_app(app)
 
     # register api
     from src.api import api

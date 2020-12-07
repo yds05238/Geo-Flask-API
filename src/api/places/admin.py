@@ -11,9 +11,7 @@ class PlacesAdminView(ModelView):
         "coords",
         "types",
     )
-    column_filters = (
-        "types",
-    )
+    column_filters = ("types",)
     column_sortable_list = (
         "name",
         "coords",

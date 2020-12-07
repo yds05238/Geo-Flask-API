@@ -7,3 +7,4 @@ psycopg2-binary==2.8.6
 GeoAlchemy2==0.8.4
 geos==0.2.2
 Shapely==1.7.1
+requests==2.25.0
