@@ -1,6 +1,6 @@
 # geo-flask-api
 
-Flask Backend API for geo-location related functions built using Flask, Flask-RestX, SQLAlchemy
+Flask Backend API for geo-location related functions built using Flask, Flask-RestX, SQLAlchemy. Connected to GitLab and deployed to Heroku.
 
 [![pipeline status](https://gitlab.com/yds05238/geo-flask-api/badges/master/pipeline.svg)](https://gitlab.com/yds05238/geo-flask-api/commits/master)
 
