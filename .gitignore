@@ -221,3 +221,7 @@ dmypy.json
 .DS_Store
 .vscode/
 __pycache__
+__pycache__
+env
+.coverage
+htmlcov/
