@@ -1,18 +1,17 @@
-name: Deploy
+name: CI
 
-on:
-  push:
-    branches:
-      - master
+on: [push]
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.6.8 # This is the action
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "geo-flask-backend-api" #Must be unique in Heroku
-          heroku_email: "jy392@cornell.edu"
-          usedocker: true
+    - uses: actions/checkout@v1
+    - name: Run a one-line script
+      run: echo Hello, world!
+    - name: Run a multi-line script
+      run: |
+        echo Add other actions to build,
+        echo test, and deploy your project.
