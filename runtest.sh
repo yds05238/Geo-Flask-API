@@ -3,6 +3,7 @@
 echo "Building + Running containers"
 
 docker-compose build 
+docker-compose build --no-cache
 docker-compose up -d 
 
 echo "Creating + Seeding DB"
