@@ -2,6 +2,8 @@
 
 Flask Backend API for geo-location related functions
 
+## Endpoints
+
 http://localhost:5004
 
 http://localhost:5004/admin/user
