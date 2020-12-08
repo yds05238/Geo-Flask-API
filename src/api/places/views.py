@@ -22,6 +22,8 @@ place = places_namespace.model(
         "name": fields.String(required=True),
         "coords": fields.String(required=True),
         "types": fields.String(required=True),
+        "lat": fields.Float(required=True),
+        "lon": fields.Float(required=True),
     },
 )
 
@@ -130,9 +132,11 @@ class PlacesSearches(Resource):
             m = -1
         if k is None:
             k = -1
-        print(lat, lon, place_types, m, k)
+        # print(lat, lon, place_types, m, k)
 
-        return get_knearest_places(lat, lon, place_types, m, k), 200
+        res = get_knearest_places(lat, lon, place_types, m, k)
+
+        return res, 200
 
 
 places_namespace.add_resource(PlacesList, "")

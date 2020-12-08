@@ -1,7 +1,6 @@
 import os
 
 from geoalchemy2 import Geography
-from geoalchemy2.shape import to_shape
 
 from src import db
 
@@ -12,22 +11,26 @@ class Place(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String, nullable=False)
+    lat = db.Column(db.Float, nullable=False)
+    lon = db.Column(db.Float, nullable=False)
     coords = db.Column(Geography(geometry_type="POINT", srid=4326), nullable=False)
+
     types = db.Column(db.VARCHAR(255), nullable=False)
 
     def __init__(self, lat, lon, name, types):
-        self.coords = f"POINT({lon} {lat})"
+        # self.coords = f"POINT({lon} {lat})"
+        self.coords = f"POINT({lat} {lon})"
         self.name = name
         self.types = types
+        self.lat = lat
+        self.lon = lon
 
     def serialize(self):
-        point = to_shape(self.coords)
-
         return {
             "name": self.name,
-            "latitude": point.y,
-            "longitude": point.x,
-            "type": self.types,
+            "latitude": self.lat,
+            "longitude": self.lon,
+            "types": self.types,
         }
 
 

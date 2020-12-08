@@ -1,9 +1,7 @@
-# import json
-
 from src import db
 from src.api.places.models import Place
-from sqlalchemy import func
-# from geoalchemy2.shape import to_shape
+
+from sqlalchemy.sql import func
 
 
 def get_all_places():
@@ -42,24 +40,45 @@ def delete_place(place):
 
 def get_knearest_places(lat, lon, types, m=-1, k=5):
     if k < 0:
-        k = 0
+        k = 1
     if m <= 0:
         pllist = Place.query.filter_by(types=types).all()
         return pllist
 
-    m_in_meters = m * 1609.34
-    temp_place = Place(lat=lat, lon=lon, name="temp", types="temp")
-    nearbyplaces = (
-        Place.query.filter(
-            func.ST_Distance_Sphere(Place.coords, temp_place.coords) < m_in_meters
+    temp = Place(lat=lat, lon=lon, name="temp_place", types="temp_type")
+    db.session.add(temp)
+    db.session.commit()
+    m = int(m)
+
+    try:
+        placesnearby = (
+            Place.query.filter(
+                func.ST_DistanceSphere(
+                    func.ST_Point(Place.lat, Place.lon), func.ST_Point(lat, lon)
+                )
+                < m
+            )
+            .order_by(
+                func.ST_DistanceSphere(
+                    func.ST_Point(Place.lat, Place.lon), func.ST_Point(lat, lon)
+                )
+            )
+            .limit(k)
         )
-        .limit(k)
-        .order_by(func.ST_Distance_Sphere(Place.coords, temp_place.coords))
-        .all()
-    )
 
-    # # remove
-    # for pl in nearbyplaces:
-    #     print(pl)
+        res = []
+        for temppl in placesnearby:
+            if temppl != temp:
+                res.append(temppl)
+        # print(res)
+    # except:
+    except Exception as e:
+        print("exception: ", e)
 
-    return nearbyplaces
+        db.session.delete(temp)
+        db.session.commit()
+    else:
+        db.session.delete(temp)
+        db.session.commit()
+
+    return res

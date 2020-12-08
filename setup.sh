@@ -1,7 +1,10 @@
 #!/bin/sh
+# Delete all containers
+docker rm $(docker ps -a -q)
+# Delete all images
+docker rmi $(docker images -q)
 
 echo "Building + Running containers"
-
 # docker-compose build 
 docker-compose build --no-cache
 docker-compose up -d 
