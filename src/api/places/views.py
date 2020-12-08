@@ -1,5 +1,5 @@
 from flask import request
-from flask_restx import Namespace, Resource, fields
+from flask_restx import Namespace, Resource, fields, reqparse
 
 
 from src.api.places.crud import (  # isort:skip
@@ -9,6 +9,7 @@ from src.api.places.crud import (  # isort:skip
     add_place,
     update_place,
     delete_place,
+    get_knearest_places,
 )
 
 places_namespace = Namespace("places")
@@ -107,5 +108,33 @@ class Places(Resource):
         return response_object, 200
 
 
+class PlacesSearches(Resource):
+    @places_namespace.marshal_with(place, as_list=True)
+    def get(self, place_types):
+        """Return nearby places of specific type."""
+        parser = reqparse.RequestParser()
+        parser.add_argument("lat", type=float, required=False)
+        parser.add_argument("lon", type=float, required=False)
+        parser.add_argument("m", type=int, required=False)
+        parser.add_argument("k", type=int, required=False)
+        args = parser.parse_args()
+        lat = args.get("lat", 0)
+        lon = args.get("lon", 0)
+        m = args.get("m", -1)
+        k = args.get("k", -1)
+        if lat is None:
+            lat = 0
+        if lon is None:
+            lon = 0
+        if m is None:
+            m = -1
+        if k is None:
+            k = -1
+        print(lat, lon, place_types, m, k)
+
+        return get_knearest_places(lat, lon, place_types, m, k), 200
+
+
 places_namespace.add_resource(PlacesList, "")
 places_namespace.add_resource(Places, "/<int:place_id>")
+places_namespace.add_resource(PlacesSearches, "/<string:place_types>")
